@@ -1,0 +1,50 @@
+package com.cricketapp.servlets;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+@WebServlet("/auth")   // This maps your servlet to /auth
+public class loginservlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    // Handle GET request (optional – redirect to login page)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.sendRedirect("login.jsp");  // redirect if someone tries GET
+    }
+
+    // Handle POST request (actual login logic)
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        // Retrieve username and password from form
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        // Example: Hardcoded validation (replace with DB check later)
+        if ("admin".equals(username) && "admin123".equals(password)) {
+            // Create session
+            HttpSession session = request.getSession();
+            session.setAttribute("username", username);
+
+            response.sendRedirect("index.jsp");  // redirect to home page
+        } else {
+            out.println("<html><body>");
+            out.println("<h3 style='color:red;'>Invalid Username or Password!</h3>");
+            out.println("<a href='login.jsp'>Try Again</a>");
+            out.println("</body></html>");
+        }
+    }
+}
+
